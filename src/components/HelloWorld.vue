@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <e-button>aaaaa</e-button>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
@@ -31,8 +32,13 @@
 </template>
 
 <script>
+import { ElButton } from 'element-plus';
+
 export default {
   name: 'HelloWorld',
+  components: {
+    'e-button': ElButton
+  },
   props: {
     msg: String
   }
