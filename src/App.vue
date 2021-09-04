@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="header">
       <el-row class="toolbar">
         <el-col :span="4"><img alt="bupt logo" class="bupt-logo" src="./assets/bupt.png"></el-col>
@@ -11,11 +11,13 @@
         </el-col>
       </el-row>
     </div>
-    <el-container>
-      <el-aside v-if="true"><SideBar/></el-aside>
+    <el-container class="offsetTop">
+      <el-container>
+      <el-aside width="178px"><SideBar/></el-aside>
       <el-main><MainFunction/></el-main>
-    </el-container>
+      </el-container>
     <el-footer>Footer</el-footer>
+    </el-container>
   </div>
 </template>
 
@@ -39,6 +41,8 @@ html {
     background: #2c3e50;
 }
 body {
+  width: 100%;
+  height: 100%;
   padding: 0;
   margin: 0;
 }
@@ -50,6 +54,14 @@ body {
   color: #2c3e50;
   width: 100%;
   height: 100%;
+}
+.container {
+  height: 100%;
+  width: 100%;
+}
+.header {
+  position: absolute;
+  z-index: 999;
 }
 .bupt-logo {
   position: relative;
@@ -76,16 +88,20 @@ body {
   user-select: none;
   transition: all .3s linear 0s;
 }
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-  }
+.el-container {
+  height: 100%;
+}
+.offsetTop {
+  padding-top: 4%;
+}
+.el-header, .el-footer {
+  background-color: #B3C0D1;
+}
 
-  .el-aside {
-    background-color: #D3DCE6;
-  }
-
-  .el-main {
-    
-    background-color: #E9EEF3;
-  }
+.el-aside {
+  background-color: #D3DCE6;
+}
+.el-main {
+  background-color: #E9EEF3;
+}
 </style>

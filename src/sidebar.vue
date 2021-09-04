@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="side-bar">
     <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
       <el-radio-button :label="false">展开</el-radio-button>
       <el-radio-button :label="true">收起</el-radio-button>
@@ -50,7 +50,7 @@ export default {
   name: "SideBar",
   data() {
     return {
-      isCollapse: true,
+      isCollapse: false,
     };
   },
   methods: {
@@ -68,5 +68,8 @@ export default {
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 200px;
   min-height: 400px;
+}
+.side-bar {
+  margin-left: -24%;
 }
 </style>
