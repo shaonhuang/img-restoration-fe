@@ -30,6 +30,9 @@ export default {
   components: {
     MainFunction,
     SideBar
+  },
+  created(){
+  window.location.hash = 'paper';
   }
 }
 </script>

@@ -1,29 +1,32 @@
 <template>
   <div>
-    <Intro/>
-    <el-button @click="show3 = !show3">Click Me</el-button>
-    <transition name="el-fade-in">
-    <FileList v-show="show3" v-if="show3"/>
-    </transition>
-    <ImgDemo/>
+    <Intro v-if="hash === 'paper'" />
+    <FileList v-if="hash === 'filesys'" />
+    <ImgDemo v-if="hash === 'demo'" />
   </div>
 </template>
 
 <script>
-import Intro from './intro/index.vue'
-import FileList from './fileList/index.vue'
-import ImgDemo from './demonstration/index.vue'
+import Intro from "./intro/index.vue";
+import FileList from "./fileList/index.vue";
+import ImgDemo from "./demonstration/index.vue";
 
 export default {
   name: "MainFunction",
   components: {
     Intro,
     FileList,
-    ImgDemo
+    ImgDemo,
   },
   data: () => ({
-      show3: true
-  })
-}
+    hash: "paper",
+  }),
+  methods: {},
+  created() {
+    window.onhashchange = () => {
+      this.hash = window.location.hash.slice(1);
+    };
+  },
+};
 </script>
 <style></style>

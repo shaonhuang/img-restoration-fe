@@ -15,8 +15,8 @@
         </div>
       </template>
     </el-upload>
-    <el-button size="small" type="primary">选取文件</el-button>
-    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+    <!-- <el-button size="small" type="primary">选取文件</el-button>
+    <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
   </div>
 </template>
 

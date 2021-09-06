@@ -1,31 +1,63 @@
 <template>
   <div>
-    <el-table
-      v-if="true"
-      :data="tableData"
-      style="width: 100%"
-      :row-class-name="tableRowClassName"
-    >
-      <el-table-column prop="date" label="日期" width="180"> </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-      <el-table-column prop="address" label="地址"> </el-table-column>
-    </el-table>
-    <el-button type="text" @click="dialogVisible = true"
-      >点击打开 Dialog</el-button
-    >
+    <div class="intro-container">
+      <el-button @click="dialogVisible = true" v-if="tableData.length"
+        >上传文件</el-button
+      >
+      <el-button @click="clearFilter" v-if="tableData.length"
+        >清除所有文件</el-button
+      >
+      <el-table
+        v-if="true"
+        :data="tableData"
+        style="width: 100%"
+        :row-class-name="tableRowClassName"
+      >
+        <el-table-column prop="date" label="上传时间" width="180">
+        </el-table-column>
+        <el-table-column prop="name" label="文件名" width="180">
+        </el-table-column>
+        <el-table-column prop="address" label="文件类型"> </el-table-column>
+        <el-table-column prop="address" label="处理状态"
+          ><template #default="scope">
+            <el-tag :key="scope.row.name" :type="'danger'">
+              {{ scope.row.name }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template #default="scope">
+            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
+              >下载</el-button
+            >
+            <el-button
+              size="mini"
+              type="danger"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+        <template #empty>
+          <el-button type="text" @click="dialogVisible = true"
+            >点击上传文件</el-button
+          >
+        </template>
+      </el-table>
+    </div>
     <el-dialog
-      title="提示"
+      title="文件上传"
       v-model="dialogVisible"
       width="30%"
       :before-close="handleClose"
     >
-      <span>这是一段信息</span>
-      <div><UploadFile/></div>
+      <!-- <span>这是一段信息</span> -->
+      <div><UploadFile /></div>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="dialogVisible = false"
-            >确 定</el-button
+            >确认上传</el-button
           >
         </span>
       </template>
@@ -34,11 +66,11 @@
 </template>
 
 <script>
-import UploadFile from '../../components/common/uploadFile/index.vue'
+import UploadFile from "../../components/common/uploadFile/index.vue";
 export default {
   name: "FileList",
   components: {
-    UploadFile
+    UploadFile,
   },
   methods: {
     // tableRowClassName({row, rowIndex}) {
