@@ -3,7 +3,8 @@
     <el-upload
       class="upload-demo"
       drag
-      action="https://jsonplaceholder.typicode.com/posts/"
+      enctype="multipart/form-data"
+      action="http://127.0.0.1:8000/api/v1/files/upload/"
       multiple
       :file-list="fileList"
     >
@@ -25,23 +26,12 @@ export default {
   name: "UploadFile",
   data() {
     return {
-      fileList: [
-        {
-          name: "food.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-        {
-          name: "food2.jpeg",
-          url:
-            "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100",
-        },
-      ],
+      fileList: [],
     };
   },
   methods: {
     handleChange(file, fileList) {
-      this.fileList = fileList.slice(-3);
+      console.log(fileList);
     },
   },
 };

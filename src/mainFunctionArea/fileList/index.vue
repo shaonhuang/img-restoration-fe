@@ -4,7 +4,10 @@
       <el-button @click="dialogVisible = true" v-if="tableData.length"
         >上传文件</el-button
       >
-      <el-button @click="clearFilter" v-if="tableData.length"
+      <el-button
+        :disabled="clearAllDisabled"
+        @click="clearAllUploadFiles"
+        v-if="tableData.length"
         >清除所有文件</el-button
       >
       <el-table
@@ -13,26 +16,31 @@
         style="width: 100%"
         :row-class-name="tableRowClassName"
       >
-        <el-table-column prop="date" label="上传时间" width="180">
+        <el-table-column prop="name" label="文件名" size="medium">
         </el-table-column>
-        <el-table-column prop="name" label="文件名" width="180">
+        <el-table-column prop="type" label="文件类型" size="mini">
         </el-table-column>
-        <el-table-column prop="address" label="文件类型"> </el-table-column>
-        <el-table-column prop="address" label="处理状态"
+        <el-table-column prop="status" label="处理状态" size="mini"
           ><template #default="scope">
             <el-tag :key="scope.row.name" :type="'danger'">
-              {{ scope.row.name }}
+              {{ handleStatus(scope.row.status) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column prop="date" label="上传时间" size="medium">
+        </el-table-column>
+        <el-table-column label="操作" size="small">
           <template #default="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-              >下载</el-button
+            <el-button
+              size="mini"
+              :disabled="handleRowDisabled(scope.$index, scope.row)"
+              @click="handleEdit(scope.$index, scope.row)"
+              >效果展示</el-button
             >
             <el-button
               size="mini"
               type="danger"
+              :disabled="handleRowDisabled(scope.$index, scope.row)"
               @click="handleDelete(scope.$index, scope.row)"
               >删除</el-button
             >
@@ -51,85 +59,143 @@
       width="30%"
       :before-close="handleClose"
     >
-      <!-- <span>这是一段信息</span> -->
       <div><UploadFile /></div>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false"
-            >确认上传</el-button
-          >
-        </span>
-      </template>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import api from "../../config/api";
+import { ProcessStatus } from "../../config/tip";
+
+// import requests from "../../assets/requests/index";
+import axios from "axios";
+import _ from "lodash";
 import UploadFile from "../../components/common/uploadFile/index.vue";
 export default {
   name: "FileList",
   components: {
     UploadFile,
   },
+  created() {
+    this.initData();
+  },
+  data() {
+    return {
+      tableData: [],
+      dialogVisible: false,
+    };
+  },
   methods: {
-    // tableRowClassName({row, rowIndex}) {
-    //   if (rowIndex === 1) {
-    //     return 'warning-row';
-    //   } else if (rowIndex === 3) {
-    //     return 'success-row';
-    //   }
-    //   return '';
-    // },
-    tableRowClassName({ rowIndex }) {
-      if (rowIndex === 1) {
+    async initData() {
+      let idArr = [];
+      this.tableData = [];
+      await axios({
+        method: "get",
+        url: api.getlist,
+      })
+        .then((response) => {
+          idArr = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      for (let id of idArr) {
+        axios({
+          method: "get",
+          url: api.info + `${id}/`,
+        })
+          .then((response) => {
+            this.tableData.push({
+              name: response.data.filename,
+              type: response.data.type,
+              status: response.data.status,
+              date: response.data.upload_date,
+            });
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
+    clearAllUploadFiles() {
+      console.log(api.deleteFileByName);
+      const table = this.tableData;
+      table.forEach((element) => {
+        axios({
+          method: "get",
+          url: api.deleteFileByName + element.name,
+        })
+          .then(function(response) {
+            console.log(response);
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      });
+      this.tableData = [];
+    },
+    tableRowClassName({ row }) {
+      if (row.status === "processing") {
         return "warning-row";
-      } else if (rowIndex === 3) {
+      } else if (row.status === "done") {
         return "success-row";
       }
       return "";
     },
     handleClose(done) {
-      // handleClose(done) {
-      //   this.$confirm('确认关闭？')
-      //     .then(_ => {
-      //       done();
-      //     })
-      //     .catch(_ => {});
-      // }
-      this.$confirm("确认关闭？")
-        .then(function() {
-          done();
-        })
-        .catch();
+      this.initData();
+      done();
     },
-  },
-  data() {
-    return {
-      tableData: [
-        {
-          date: "2016-05-02",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-04",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-01",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-        {
-          date: "2016-05-03",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄",
-        },
-      ],
-      dialogVisible: false,
-    };
+    handleRowDisabled(_, row) {
+      // console.log(idx, row);
+      return row.status === "processing";
+    },
+    clearAllDisabled() {
+      return !_.every(this.tableData, (item) => {
+        item.status === "processing";
+      });
+    },
+    handleStatus(type) {
+      return ProcessStatus[type].text;
+    },
+    async refresh() {
+      let idArr = [];
+      await axios({
+        method: "get",
+        url: api.getlist,
+      })
+        .then((response) => {
+          idArr = response.data;
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+      for (let id of idArr) {
+        axios({
+          method: "get",
+          url: api.info + `${id}/`,
+        })
+          .then(() => {
+            // if (
+            //   _.find(this.tableData, {
+            //     id: response.data.id,
+            //   }) === undefined
+            // ) {
+            //   this.tableData.push({
+            //     name: response.data.filename,
+            //     type: response.data.type,
+            //     status: response.data.status,
+            //     date: response.data.upload_date,
+            //   });
+            // }
+            console.log(this.tableData);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    },
   },
 };
 </script>

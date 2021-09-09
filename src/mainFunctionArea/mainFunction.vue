@@ -7,6 +7,7 @@
 </template>
 
 <script>
+// import api from "../config/api";
 import Intro from "./intro/index.vue";
 import FileList from "./fileList/index.vue";
 import ImgDemo from "./demonstration/index.vue";
