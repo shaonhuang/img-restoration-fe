@@ -15,9 +15,11 @@
     "jquery": "^3.6.0",
     "js-base64": "^3.7.0",
     "lodash": "^4.17.21",
+    "pdfvuer": "^2.0.1",
     "vue": "^3.0.0",
     "vue-compare-image": "^0.2.0",
-    "vue-compare-two-images-component": "^1.0.5"
+    "vue-compare-two-images-component": "^1.0.5",
+    "vue-pdf": "^4.3.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
