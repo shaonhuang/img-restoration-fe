@@ -1,98 +1,55 @@
 <template>
   <div class="intro-container">
     <h1>效果展示</h1>
-    <div
-      class="comparison"
-      style="--slide: 500;left: 50%;
-    transform: translateX(-50%);"
-    >
-      <input
-        type="range"
-        min="1"
-        max="1000"
-        value="500"
-        class="slider"
-        oninput="this.parentNode.style.setProperty('--slide', `${this.value}`)"
-      />
+    <div>
+      <img :src="left" alt="left" />
+      <p>原生文件</p>
+      <img :src="right" alt="right" />
+      <p>复原后文件</p>
     </div>
     <div style="margin-top:3vh;padding-left:2.4%">
-      <el-button>下载原图</el-button>
-      <el-button>下载修复后图像</el-button>
+      <el-button @click="downloadOr">下载原图</el-button>
+      <el-button @click="downloadRepair">下载修复后图像</el-button>
     </div>
   </div>
 </template>
 
 <script>
+// import axios from "axios";
+// const Base64 = require("js-base64").Base64;
+// import app from "./components/comparePics/index.vue";
+
+import api from "../../config/api";
 export default {
   name: "ImgDemo",
+  components: {},
+  // props: {
+  //   name: String,
+  // },
+  data() {
+    return {
+      name: "",
+      // left: "../../assets/cat.jpg",
+      // right: "../../assets/cat.jpg",
+      left: api.getFileByName + this.name,
+      right: api.getFileByName + this.name,
+    };
+  },
+  beforeMount() {
+    const hashArr = window.location.hash.split("?");
+    const name = hashArr[hashArr.length - 1].split("name=")[1];
+    this.name = name;
+    this.left = api.getFileByName + name;
+    this.right = api.getFileByName + name;
+    console.log(name);
+  },
   methods: {
     goBack() {
       window.history.back();
     },
   },
+  mounted() {},
 };
 </script>
 
-<style>
-/* https://unsplash.com/photos/qiSGdBYWtSY */
-
-.comparison {
-  --image: url(https://images.unsplash.com/photo-1612142186636-3e65d8a446fe?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2100&q=80);
-  --height: 400px;
-
-  width: 600px;
-  height: var(--height);
-  position: relative;
-
-  overflow: hidden;
-  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-}
-
-.comparison::before,
-.comparison::after {
-  content: "";
-  display: block;
-  width: inherit;
-  height: inherit;
-  background-size: cover;
-  background-image: var(--image);
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.comparison::before {
-  filter: grayscale(100%);
-}
-
-.comparison::after {
-  clip-path: inset(0 0 0 calc((var(--slide) / 10) * 1%));
-}
-
-.slider {
-  -webkit-appearance: none;
-  appearance: none;
-  outline: none;
-  margin: 0;
-
-  background: transparent;
-  z-index: 100;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 14px;
-  height: var(--height);
-  background: #000;
-  box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
-  border-radius: 2px;
-  cursor: ew-resize;
-}
-</style>
+<style></style>

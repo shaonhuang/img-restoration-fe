@@ -22,7 +22,10 @@
         </el-table-column>
         <el-table-column prop="status" label="处理状态" size="mini"
           ><template #default="scope">
-            <el-tag :key="scope.row.name" :type="'danger'">
+            <el-tag
+              :key="scope.row.name"
+              :type="scope.row.status === 'processing' ? 'danger' : 'success'"
+            >
               {{ handleStatus(scope.row.status) }}
             </el-tag>
           </template>
@@ -34,7 +37,7 @@
             <el-button
               size="mini"
               :disabled="handleRowDisabled(scope.$index, scope.row)"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleDemo(scope.$index, scope.row)"
               >效果展示</el-button
             >
             <el-button
@@ -70,7 +73,7 @@ import { ProcessStatus } from "../../config/tip";
 
 // import requests from "../../assets/requests/index";
 import axios from "axios";
-import _ from "lodash";
+import every from "lodash/every";
 import UploadFile from "../../components/common/uploadFile/index.vue";
 export default {
   name: "FileList",
@@ -79,6 +82,7 @@ export default {
   },
   created() {
     this.initData();
+    this.handleProcessing();
   },
   data() {
     return {
@@ -119,7 +123,6 @@ export default {
       }
     },
     clearAllUploadFiles() {
-      console.log(api.deleteFileByName);
       const table = this.tableData;
       table.forEach((element) => {
         axios({
@@ -145,56 +148,56 @@ export default {
     },
     handleClose(done) {
       this.initData();
+      this.handleProcessing();
       done();
     },
     handleRowDisabled(_, row) {
-      // console.log(idx, row);
       return row.status === "processing";
     },
     clearAllDisabled() {
-      return !_.every(this.tableData, (item) => {
+      return !every(this.tableData, (item) => {
         item.status === "processing";
       });
     },
     handleStatus(type) {
       return ProcessStatus[type].text;
     },
-    async refresh() {
-      let idArr = [];
-      await axios({
-        method: "get",
-        url: api.getlist,
-      })
-        .then((response) => {
-          idArr = response.data;
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-      for (let id of idArr) {
+    async handleProcessing() {
+      setInterval(() => {
+        if (this.tableData.length < 1) {
+          clearInterval();
+        }
+        if (
+          every(this.tableData, (item) => {
+            item.status === "done";
+          })
+        ) {
+          clearInterval();
+          this.initData();
+        } else {
+          this.handleCheckDoneByName();
+          this.initData();
+        }
+      }, 10000);
+    },
+    async handleCheckDoneByName() {
+      for (const item of this.tableData) {
         axios({
           method: "get",
-          url: api.info + `${id}/`,
+          url: api.checkDoneByName + item.name,
         })
-          .then(() => {
-            // if (
-            //   _.find(this.tableData, {
-            //     id: response.data.id,
-            //   }) === undefined
-            // ) {
-            //   this.tableData.push({
-            //     name: response.data.filename,
-            //     type: response.data.type,
-            //     status: response.data.status,
-            //     date: response.data.upload_date,
-            //   });
-            // }
-            console.log(this.tableData);
+          .then((response) => {
+            console.log(response);
           })
-          .catch((error) => {
-            console.error(error);
+          .catch((response) => {
+            console.log(response);
           });
       }
+    },
+    handleDemo(idx, row) {
+      console.log(idx);
+      console.log(row);
+      window.location.hash = `demo?name=${row.name}`;
     },
   },
 };

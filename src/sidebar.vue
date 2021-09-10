@@ -11,9 +11,9 @@
         <i class="el-icon-menu"></i>
         <template #title>文件管理</template>
       </el-menu-item>
-      <el-menu-item index="3" @click="handleIdx('demo')">
+      <el-menu-item index="3" @click="handleIdx('demo')" disabled>
         <i class="el-icon-document"></i>
-        <template #title>效果显示</template>
+        <template #title \>效果显示</template>
       </el-menu-item>
       <el-menu-item index="4" @click="handleIdx('about')">
         <i class="el-icon-setting"></i>

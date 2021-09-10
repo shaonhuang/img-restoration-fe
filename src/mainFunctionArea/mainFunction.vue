@@ -2,7 +2,7 @@
   <div>
     <Intro v-if="hash === 'paper'" />
     <FileList v-if="hash === 'filesys'" />
-    <ImgDemo v-if="hash === 'demo'" />
+    <ImgDemo v-if="hash.slice(0, 4) === 'demo'" />
   </div>
 </template>
 

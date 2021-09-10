@@ -6,6 +6,7 @@ const localHost = "http://127.0.0.1:8000";
 // path("info/<int:id>/", views.getInfo),
 // path("getfile/<str:type>/<int:id>/", views.getFile),
 // path('delete/<str:name>/', views.delete),
+// path('check/byname/<str:name>/', views.checkDoneByName),
 // path("123", views.test);
 
 const api = {
@@ -16,6 +17,7 @@ const api = {
   getFileByName: "/api/v1/files/getfile/byname/",
   deleteFileByName: "/api/v1/files/delete/byname/",
   deleteFileById: "/api/v1/files/delete/byid/",
+  checkDoneByName: "/api/v1/files/check/byname/",
   test: "/api/v1/files/123/",
 };
 for (const key in api) {
