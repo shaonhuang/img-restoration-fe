@@ -15,6 +15,8 @@ const api = {
   info: "/api/v1/files/info/",
   getFileById: "/api/v1/files/getfile/byid/",
   getFileByName: "/api/v1/files/getfile/byname/",
+  getFileByLrByName: "/api/v1/files/getfile/byname/lr/",
+  getFileByHrByName: "/api/v1/files/getfile/byname/hr/",
   deleteFileByName: "/api/v1/files/delete/byname/",
   deleteFileById: "/api/v1/files/delete/byid/",
   checkDoneByName: "/api/v1/files/check/byname/",
